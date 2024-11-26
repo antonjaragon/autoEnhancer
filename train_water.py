@@ -14,7 +14,9 @@ import contextual_loss as cl
 
 import joint_transforms
 from config import msra10k_path, video_train_path, datasets_root, video_seq_gt_path, video_seq_path, saving_path
-from water_dataset import WaterImageFolder, WaterImage2Folder, WaterImage3Folder, WaterImage4Folder
+# from water_dataset import WaterImageFolder, WaterImage2Folder, WaterImage3Folder, WaterImage4Folder
+from iris_dataset import IrisImageFolderTrain
+
 from underwater_model.model_SPOS import Water
 
 from misc import AvgMeter, check_mkdir, VGGPerceptualLoss, Lab_Loss, GANLoss, VGG19_PercepLoss
@@ -39,9 +41,9 @@ np.random.seed(2021)
 # torch.cuda.set_device(device_id)
 
 
-time_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+time_str = time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime())
 ckpt_path = saving_path
-exp_name = 'WaterEnhance' + '_' + time_str
+exp_name = 'IrisEnhance' + '_' + time_str
 
 args = {
     'choice': 9,
@@ -51,7 +53,7 @@ args = {
     'distillation': False,
     'L2': False,
     'KL': True,
-    'iter_num': 200000,
+    'iter_num': 2000,
     'iter_save': 4000,
     'iter_start_seq': 0,
     'train_batch_size': 3,
@@ -61,9 +63,9 @@ args = {
     'weight_decay': 5e-4,
     'momentum': 0.925,
     'snapshot': '',
-    'pretrain': '',
+    'pretrain': 'ckpt/paper_model/200000.pth',
     # 'imgs_file': '/home/user/ubuntu/data/LOLdataset/our485',
-    'imgs_file': '/home/user/ubuntu/data/LSUI',
+    'imgs_file': '/home/antaramol/datasets/PolyU_Cross_Iris_preprocessed/train',
     'image_size': 320,
     'crop_size': [256, 320],
     # 'self_distill': 0.1,
@@ -92,11 +94,11 @@ img_transform = transforms.Compose([
 target_transform = transforms.ToTensor()
 
 # train_set = ImageFolder(msra10k_path, joint_transform, img_transform, target_transform)
-train_set = WaterImage2Folder(args['imgs_file'], joint_transform, img_transform, target_transform)
+train_set = IrisImageFolderTrain(args['imgs_file'], joint_transform, img_transform, target_transform)
 train_loader = DataLoader(train_set, batch_size=args['train_batch_size'], num_workers=4, shuffle=True)
 
-train_set2 = WaterImage2Folder(args['imgs_file'], joint_transform2, img_transform, target_transform)
-train_loader2 = DataLoader(train_set2, batch_size=args['train_batch_size']-2, num_workers=4, shuffle=True)
+# train_set2 = WaterImage2Folder(args['imgs_file'], joint_transform2, img_transform, target_transform)
+# train_loader2 = DataLoader(train_set2, batch_size=args['train_batch_size']-2, num_workers=4, shuffle=True)
 # if train_set2 is not None:
 #     train_loader2 = DataLoader(train_set2, batch_size=args['train_batch_size'], num_workers=4, shuffle=True)
 

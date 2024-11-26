@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from underwater_model.op import *
-from underwater_model.vit import ViT
+# from underwater_model.vit import ViT
 from underwater_model.choice_block import block_choice
 
 
